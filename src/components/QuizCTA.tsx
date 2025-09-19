@@ -1,146 +1,116 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
-import { 
-  Play, 
-  Clock, 
-  Users, 
-  Target,
-  CheckCircle,
-  ArrowRight
-} from "lucide-react";
+import { MapPin, Wifi, Brain, Trophy, Bot, Globe } from "lucide-react";
 
-const QuizCTA = () => {
-  const benefits = [
+const FeaturesSection = () => {
+  const features = [
     {
-      icon: <Target className="w-5 h-5 text-primary" />,
-      text: "Personalized career recommendations"
+      title: "Location-Based College Finder",
+      description: "Discover nearby colleges and universities using your location. Get directions, view campus details, and explore admission requirements.",
+      icon: MapPin,
+      highlights: ["GPS Integration", "Offline Maps", "Campus Details", "Admission Info"],
+      gradient: "from-blue-500 to-cyan-500",
     },
     {
-      icon: <CheckCircle className="w-5 h-5 text-secondary" />,
-      text: "College & course matching"
+      title: "Gamified Aptitude Quiz",
+      description: "Take our engaging AI-powered quiz to discover your strengths and get personalized career recommendations with clear roadmaps.",
+      icon: Brain,
+      highlights: ["AI-Powered", "Personalized Results", "Career Roadmaps", "Progress Tracking"],
+      gradient: "from-purple-500 to-pink-500",
     },
     {
-      icon: <Users className="w-5 h-5 text-accent" />,
-      text: "Scholarship opportunities"
-    }
-  ];
-
-  const stats = [
-    { value: "92%", label: "Accuracy Rate" },
-    { value: "15 min", label: "Quick Assessment" },
-    { value: "50+", label: "Career Paths" }
+      title: "Offline Access",
+      description: "Download content packs for your district or state. Access college information, scholarships, and resources even without internet.",
+      icon: Wifi,
+      highlights: ["Content Packs", "Offline Storage", "Auto Sync", "Rural Friendly"],
+      gradient: "from-green-500 to-emerald-500",
+    },
+    {
+      title: "AI Career Assistant",
+      description: "Get instant answers to your career questions with our intelligent chatbot that understands your context and goals.",
+      icon: Bot,
+      highlights: ["24/7 Available", "Context Aware", "Personalized Advice", "Multi-language"],
+      gradient: "from-orange-500 to-red-500",
+    },
+    {
+      title: "Scholarship Discovery",
+      description: "Find scholarships you're eligible for using verified government data from scholarships.gov.in and other official sources.",
+      icon: Trophy,
+      highlights: ["Government Data", "Eligibility Matching", "Application Guidance", "Deadline Alerts"],
+      gradient: "from-yellow-500 to-orange-500",
+    },
+    {
+      title: "Multi-language Support",
+      description: "Access Career Path in English, Hindi, and regional languages with simple language switching and accessibility features.",
+      icon: Globe,
+      highlights: ["Regional Languages", "Accessibility", "Simple Interface", "Voice Support"],
+      gradient: "from-indigo-500 to-purple-500",
+    },
   ];
 
   return (
-    <section id="quiz" className="py-20 bg-gradient-to-br from-primary/5 via-background to-accent/5">
+    <section id="features" className="pt-16 pb-20 lg:pt-24 lg:pb-28 bg-background scroll-mt-16">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Main CTA Card */}
-          <Card className="border-0 shadow-strong bg-gradient-to-r from-card to-card/95 backdrop-blur-sm overflow-hidden">
-            <CardContent className="p-8 lg:p-12">
-              <div className="grid lg:grid-cols-2 gap-8 items-center">
-                {/* Left Content */}
-                <div className="space-y-6">
-                  <div className="space-y-3">
-                    <Badge variant="secondary" className="inline-flex items-center gap-2">
-                      <Play className="w-3 h-3" />
-                      Start Your Journey
-                    </Badge>
-                    <h2 className="text-3xl lg:text-4xl font-bold leading-tight">
-                      Discover Your Perfect
-                      <span className="block gradient-hero bg-clip-text text-transparent">
-                        Career Path
-                      </span>
-                    </h2>
-                    <p className="text-lg text-muted-foreground">
-                      Take our AI-powered aptitude quiz to get personalized recommendations 
-                      based on your interests, skills, and goals.
-                    </p>
+        {/* Section Header */}
+        <div className="text-center mb-12 lg:mb-16">
+          <Badge variant="outline" className="mb-4 text-primary border-primary/20">
+            Powerful Features
+          </Badge>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Everything You Need for Career Success
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            Our platform combines AI technology, government data, and offline capabilities 
+            to provide reliable career guidance.
+          </p>
+        </div>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <Card
+                key={index}
+                className="group relative overflow-hidden hover:-translate-y-2 hover:scale-105 transition-transform duration-500 bg-card-gradient border-0 shadow-soft hover:shadow-xl"
+              >
+                <div className="p-6">
+                  {/* Icon */}
+                  <div
+                    className={`inline-flex w-12 h-12 items-center justify-center rounded-xl bg-gradient-to-r ${feature.gradient} mb-4 transform transition-transform duration-300 group-hover:scale-110`}
+                  >
+                    <Icon className="h-6 w-6 text-white" />
                   </div>
 
-                  {/* Benefits */}
-                  <div className="space-y-3">
-                    {benefits.map((benefit, index) => (
-                      <div key={index} className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
-                          {benefit.icon}
-                        </div>
-                        <span className="text-sm font-medium">{benefit.text}</span>
-                      </div>
+                  {/* Content */}
+                  <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors">
+                    {feature.title}
+                  </h3>
+                  
+                  <p className="text-muted-foreground mb-4 leading-relaxed">
+                    {feature.description}
+                  </p>
+
+                  {/* Highlights */}
+                  <div className="flex flex-wrap gap-2">
+                    {feature.highlights.map((highlight, idx) => (
+                      <Badge
+                        key={idx}
+                        variant="secondary"
+                        className="text-xs transform transition duration-300 group-hover:scale-105"
+                      >
+                        {highlight}
+                      </Badge>
                     ))}
                   </div>
-
-                  {/* Quiz Info */}
-                  <div className="flex items-center gap-6 p-4 bg-muted/50 rounded-xl">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Clock className="w-4 h-4 text-primary" />
-                      <span className="font-medium">15 minutes</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Users className="w-4 h-4 text-secondary" />
-                      <span className="font-medium">10,000+ completed</span>
-                    </div>
-                  </div>
-
-                  {/* CTA Button */}
-                  <Link to="/career-quiz">
-                    <Button variant="hero" size="lg" className="w-full sm:w-auto animate-pulse-glow">
-                      Start Career Quiz
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  </Link>
                 </div>
-
-                {/* Right Content - Stats */}
-                <div className="space-y-6">
-                  <div className="grid grid-cols-3 gap-4">
-                    {stats.map((stat, index) => (
-                      <div key={index} className="text-center p-4 bg-background/80 rounded-xl shadow-soft">
-                        <p className="text-2xl font-bold text-primary">{stat.value}</p>
-                        <p className="text-xs text-muted-foreground">{stat.label}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Sample Questions Preview */}
-                  <div className="p-6 bg-background/80 rounded-xl shadow-soft">
-                    <h4 className="font-semibold mb-4">Sample Question:</h4>
-                    <div className="space-y-3">
-                      <p className="text-sm text-muted-foreground">
-                        "What motivates you most in your ideal career?"
-                      </p>
-                      <div className="space-y-2">
-                        {["Solving complex problems", "Helping others", "Creative expression", "Leadership opportunities"].map((option, index) => (
-                          <Button 
-                            key={index} 
-                            variant="quiz" 
-                            size="sm" 
-                            className="w-full justify-start text-xs"
-                          >
-                            {option}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Additional Info */}
-          <div className="mt-8 text-center">
-            <p className="text-sm text-muted-foreground">
-              Your quiz results will include personalized college recommendations, scholarship matches, 
-              and detailed career pathway visualizations powered by real government data.
-            </p>
-          </div>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 };
 
-export default QuizCTA;
+export default FeaturesSection;

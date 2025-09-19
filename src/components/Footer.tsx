@@ -14,7 +14,7 @@ const Footer = () => {
                 <GraduationCap className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold">EduPath AI</h3>
+                <h3 className="text-xl font-bold">career path</h3>
                 <p className="text-sm opacity-70">Smart Career Guidance</p>
               </div>
             </div>
