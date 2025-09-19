@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Users, BookOpen, Award } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/edupath-hero.jpg";
+import heroImage from "@/assets/pic2.jpg";
 
 const Hero = () => {
   return (
@@ -102,7 +102,7 @@ const Hero = () => {
             <div className="relative z-10 animate-float">
               <img 
                 src={heroImage} 
-                alt="Students using EduPath AI for career guidance" 
+                alt="Students using Career_path for career guidance" 
                 className="w-full h-auto rounded-2xl shadow-strong"
               />
             </div>

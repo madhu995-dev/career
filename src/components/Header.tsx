@@ -13,7 +13,7 @@ const Header = () => {
               <GraduationCap className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-primary">EduPath AI</h1>
+              <h1 className="text-xl font-bold text-primary">Career Path</h1>
               <p className="text-xs text-muted-foreground">Smart Career Guidance</p>
             </div>
           </Link>
@@ -31,6 +31,9 @@ const Header = () => {
             </Link>
             <Link to="/career-quiz" className="text-sm font-medium hover:text-primary transition-smooth">
               Career Quiz
+            </Link>
+			<Link to="/career-quiz" className="text-sm font-medium hover:text-primary transition-smooth">
+              findout
             </Link>
           </nav>
 
