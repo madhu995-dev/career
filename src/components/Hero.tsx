@@ -6,7 +6,7 @@ import heroImage from "@/assets/pic1.jpeg";
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-accent/10 pt-16 lg:pt-24 pb-20 lg:pb-28 scroll-mt-16">
+    <section className="relative overflow-hidden bg-gradient-to-br from-background via-primary/5 to-accent/10 pt-8 lg:pt-16 pb-20 lg:pb-28 scroll-mt-16">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
 

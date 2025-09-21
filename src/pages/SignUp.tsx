@@ -23,7 +23,7 @@ const SignUp = () => {
               <GraduationCap className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-primary">EduPath AI</h1>
+              <h1 className="text-2xl font-bold text-primary">Career Path</h1>
               <p className="text-sm text-muted-foreground">Smart Career Guidance</p>
             </div>
           </div>
