@@ -5,8 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Search, Calendar, DollarSign, Users, Clock, Award, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Scholarships = () => {
+  const navigate = useNavigate();
   const scholarships = [
     {
       id: 1,
@@ -100,10 +102,14 @@ const Scholarships = () => {
       <header className="border-b bg-background/95 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2 text-primary hover:opacity-80 transition-smooth">
-              <ArrowLeft className="w-4 h-4" />
-              <span className="font-medium">Back to Home</span>
-            </Link>
+          <Button
+              variant="ghost"
+              onClick={() => navigate("/dashboard")}
+              className="flex items-center space-x-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to Dashboard</span>
+            </Button>
             
             <h1 className="text-xl font-bold">Scholarship Portal</h1>
             

@@ -3,10 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Search, MapPin, Star, Users, DollarSign, Filter } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowLeft, Search, MapPin, Star, Users, Filter } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CollegeFinder = () => {
+  const navigate = useNavigate();
   const colleges = [
     {
       id: 1,
@@ -20,12 +21,12 @@ const CollegeFinder = () => {
       cutoff: "JEE Adv. Rank 50",
       established: 1961,
       students: 8000,
-      badge: "Top Tier"
+      badge: "Top Tier",
     },
     {
       id: 2,
       name: "Jawaharlal Nehru University",
-      location: "New Delhi, Delhi", 
+      location: "New Delhi, Delhi",
       type: "Government",
       rating: 4.5,
       nirfRank: 12,
@@ -34,13 +35,13 @@ const CollegeFinder = () => {
       cutoff: "CUET Rank 100",
       established: 1969,
       students: 8500,
-      badge: "Research Excellence"
+      badge: "Research Excellence",
     },
     {
       id: 3,
       name: "University of Delhi",
       location: "Delhi, Delhi",
-      type: "Government", 
+      type: "Government",
       rating: 4.3,
       nirfRank: 8,
       fees: "₹35,000/year",
@@ -48,7 +49,7 @@ const CollegeFinder = () => {
       cutoff: "CUET Rank 500",
       established: 1922,
       students: 132000,
-      badge: "Historic"
+      badge: "Historic",
     },
     {
       id: 4,
@@ -57,12 +58,12 @@ const CollegeFinder = () => {
       type: "Government",
       rating: 4.9,
       nirfRank: 1,
-      fees: "₹65,000/year", 
+      fees: "₹65,000/year",
       courses: ["BS", "MS", "PhD"],
       cutoff: "KVPY/JEE",
       established: 1909,
       students: 3000,
-      badge: "Research Leader"
+      badge: "Research Leader",
     },
     {
       id: 5,
@@ -73,10 +74,10 @@ const CollegeFinder = () => {
       nirfRank: 18,
       fees: "₹75,000/year",
       courses: ["B.Tech", "M.Tech", "MBA"],
-      cutoff: "TNEA Rank 1000", 
+      cutoff: "TNEA Rank 1000",
       established: 1978,
       students: 40000,
-      badge: "Engineering Hub"
+      badge: "Engineering Hub",
     },
     {
       id: 6,
@@ -88,10 +89,10 @@ const CollegeFinder = () => {
       fees: "₹40,000/year",
       courses: ["BA", "BSc", "B.Tech"],
       cutoff: "BHU CET Rank 2000",
-      established: 1916, 
+      established: 1916,
       students: 27000,
-      badge: "Cultural Heritage"
-    }
+      badge: "Cultural Heritage",
+    },
   ];
 
   return (
@@ -100,13 +101,17 @@ const CollegeFinder = () => {
       <header className="border-b bg-background/95 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2 text-primary hover:opacity-80 transition-smooth">
-              <ArrowLeft className="w-4 h-4" />
-              <span className="font-medium">Back to Home</span>
-            </Link>
-            
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/dashboard")}
+              className="flex items-center space-x-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to Dashboard</span>
+            </Button>
+
             <h1 className="text-xl font-bold">College Finder</h1>
-            
+
             <Badge variant="secondary" className="flex items-center gap-1">
               <Star className="w-3 h-3" />
               NIRF Verified
@@ -128,8 +133,8 @@ const CollegeFinder = () => {
             <CardContent>
               <div className="grid lg:grid-cols-4 gap-4">
                 <div className="lg:col-span-2">
-                  <Input 
-                    placeholder="Search colleges, courses, or locations..." 
+                  <Input
+                    placeholder="Search colleges, courses, or locations..."
                     className="h-12"
                   />
                 </div>
@@ -158,21 +163,15 @@ const CollegeFinder = () => {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="flex flex-wrap gap-4 mt-4">
                 <Button variant="outline" size="sm" className="flex items-center gap-1">
                   <Filter className="w-3 h-3" />
                   Fees: Under ₹1L
                 </Button>
-                <Button variant="outline" size="sm">
-                  Government Only
-                </Button>
-                <Button variant="outline" size="sm">
-                  Top 50 NIRF
-                </Button>
-                <Button variant="outline" size="sm">
-                  Nearby (50km)
-                </Button>
+                <Button variant="outline" size="sm">Government Only</Button>
+                <Button variant="outline" size="sm">Top 50 NIRF</Button>
+                <Button variant="outline" size="sm">Nearby (50km)</Button>
               </div>
             </CardContent>
           </Card>
@@ -181,7 +180,9 @@ const CollegeFinder = () => {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold">Recommended Colleges</h2>
-              <p className="text-muted-foreground">Showing {colleges.length} colleges based on government data</p>
+              <p className="text-muted-foreground">
+                Showing {colleges.length} colleges based on government data
+              </p>
             </div>
             <Select>
               <SelectTrigger className="w-48">
@@ -199,7 +200,10 @@ const CollegeFinder = () => {
           {/* College Cards */}
           <div className="space-y-6">
             {colleges.map((college) => (
-              <Card key={college.id} className="shadow-medium border-0 hover:shadow-strong transition-smooth">
+              <Card
+                key={college.id}
+                className="shadow-medium border-0 hover:shadow-strong transition-smooth"
+              >
                 <CardContent className="p-6">
                   <div className="grid lg:grid-cols-4 gap-6 items-start">
                     {/* College Info */}
@@ -237,7 +241,7 @@ const CollegeFinder = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="flex flex-wrap gap-2">
                         {college.courses.map((course, index) => (
                           <Badge key={index} variant="outline" className="text-xs">
