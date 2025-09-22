@@ -27,6 +27,10 @@ import JobsInternships from "./pages/JobsInternships";
 import PassionExplorer from "./pages/PassionExplorer";
 import Profile from "./pages/Profile";
 
+// Quiz system
+import QuizPage from "./pages/QuizPage";     // ✅ new
+import ResultsPage from "./pages/ResultsPage"; // ✅ new
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -50,6 +54,11 @@ const App = () => (
           <Route path="/chat" element={<GeminiChat />} /> 
           <Route path="/demo" element={<Demo />} />
           <Route path="/faq" element={<FAQ />} />
+
+          {/* Quiz Routes */}
+          <Route path="/quiz/10th" element={<QuizPage level="10th" />} />
+          <Route path="/quiz/12th" element={<QuizPage level="12th" />} />
+          <Route path="/results" element={<ResultsPage />} />
 
           {/* Newly Added Pages */}
           <Route path="/resume" element={<ResumeHelper />} />

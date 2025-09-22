@@ -145,89 +145,111 @@ const Dashboard = () => {
     navigate('/');
   };
 
-  // 🔽 Rest of your code is 100% unchanged
+  // 🔽 Explore Careers view (unchanged)
   if (showExploreView) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
         <Header />
-        
-        {/* Explore Careers Content */}
-        <div className="container mx-auto px-4 py-8 flex-1">
-          <div className="flex items-center space-x-4 mb-8">
-            <Button 
-              variant="ghost" 
-              onClick={() => setShowExploreView(false)}
-              className="flex items-center space-x-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span>Back to Dashboard</span>
-            </Button>
-          </div>
-
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">Explore Career Streams</h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Choose your academic stream based on your interests and career goals. Each stream opens up unique opportunities and career paths.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {streams.map((stream, index) => (
-              <Card key={index} className="h-full flex flex-col">
-                <CardHeader className="text-center">
-                  <div className={`w-16 h-16 mx-auto rounded-full bg-gradient-to-r ${stream.color} p-4 mb-4`}>
-                    <stream.icon className="h-8 w-8 text-white" />
-                  </div>
-                  <CardTitle className="text-2xl">{stream.name}</CardTitle>
+        {/* Profile Summary */}
+        <div className="container mx-auto px-4 mt-8">
+          <Card className="border-0 shadow-md bg-gradient-to-r from-indigo-500/10 to-blue-500/10 dark:from-indigo-900/20 dark:to-blue-900/20">
+            <CardHeader className="flex flex-col sm:flex-row items-center sm:items-start sm:justify-between gap-4">
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold">
+                  {userInfo.name.charAt(0)}
+                </div>
+                <div>
+                  <CardTitle className="text-2xl">{userInfo.name}</CardTitle>
                   <CardDescription className="text-base">
-                    {stream.description}
+                    {userInfo.educationLevel}
                   </CardDescription>
-                </CardHeader>
-                
-                <CardContent className="flex-1 space-y-6">
-                  <div>
-                    <h4 className="font-semibold mb-3 text-lg">Popular Courses</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {stream.courses.map((course, courseIndex) => (
-                        <span 
-                          key={courseIndex}
-                          className="px-3 py-1 bg-secondary rounded-full text-sm"
-                        >
-                          {course}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="font-semibold mb-3 text-lg">Career Options</h4>
-                    <ul className="space-y-2">
-                      {stream.careers.map((career, careerIndex) => (
-                        <li key={careerIndex} className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-primary rounded-full"></div>
-                          <span className="text-muted-foreground">{career}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <Button 
-                    className={`w-full bg-gradient-to-r ${stream.color} hover:opacity-90`}
-                    onClick={() => handleStreamAction(stream.name)}
-                  >
-                    Find {stream.name.split(' ')[0]} Colleges
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                </div>
+              </div>
+              <Button variant="outline" onClick={() => navigate('/profile')}>
+                View Full Profile
+              </Button>
+            </CardHeader>
+          </Card>
         </div>
-        
+        {/* Rest of Explore Careers unchanged */}
+		 {/* ✅ Explore Careers Content */}
+      <div className="container mx-auto px-4 py-8 flex-1">
+        <div className="flex items-center space-x-4 mb-8">
+          <Button 
+            variant="ghost" 
+            onClick={() => setShowExploreView(false)}
+            className="flex items-center space-x-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back to Dashboard</span>
+          </Button>
+        </div>
+
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-4">Explore Career Streams</h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Choose your academic stream based on your interests and career goals. Each stream opens up unique opportunities and career paths.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {streams.map((stream, index) => (
+            <Card key={index} className="h-full flex flex-col">
+              <CardHeader className="text-center">
+                <div className={`w-16 h-16 mx-auto rounded-full bg-gradient-to-r ${stream.color} p-4 mb-4`}>
+                  <stream.icon className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-2xl">{stream.name}</CardTitle>
+                <CardDescription className="text-base">
+                  {stream.description}
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="flex-1 space-y-6">
+                <div>
+                  <h4 className="font-semibold mb-3 text-lg">Popular Courses</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {stream.courses.map((course, i) => (
+                      <span 
+                        key={i}
+                        className="px-3 py-1 bg-secondary rounded-full text-sm"
+                      >
+                        {course}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold mb-3 text-lg">Career Options</h4>
+                  <ul className="space-y-2">
+                    {stream.careers.map((career, i) => (
+                      <li key={i} className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                        <span className="text-muted-foreground">{career}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <Button 
+                  className={`w-full bg-gradient-to-r ${stream.color} hover:opacity-90`}
+                  onClick={() => handleStreamAction(stream.name)}
+                >
+                  Find {stream.name.split(' ')[0]} Colleges
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+        {/* ... */}
         <Footer />
       </div>
     );
   }
 
+  // 🔽 Main Dashboard view
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
       <Header />
@@ -255,7 +277,7 @@ const Dashboard = () => {
                 : "Discover your ideal career stream.",
               status: "Quiz pending – Get started now",
               gradient: "from-blue-500 to-cyan-400",
-              path: "/quiz"
+              path: userInfo.educationLevel === '10th Class' ? "/quiz/10th" : "/quiz/12th" // ✅ fixed
             },
             {
               icon: Globe,
@@ -298,35 +320,8 @@ const Dashboard = () => {
                 : "Scholarships for 12th pass students.",
               gradient: "from-teal-500 to-cyan-400",
               path: "/scholarships"
-            }
-          ].map((feature, index) => (
-            <Card 
-              key={index}
-              className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-0"
-              onClick={() => handleFeatureClick(feature.title, feature.path)}
-            >
-              <CardHeader>
-                <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.gradient} p-3 mb-4`}>
-                  <feature.icon className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle className="group-hover:text-primary transition-colors">
-                  {feature.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="mb-2">{feature.description}</CardDescription>
-                {feature.status && (
-                  <p className="text-sm text-orange-500 font-medium">{feature.status}</p>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Extended Features */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {[
-            {
+            },
+			{
               icon: MessageCircle,
               title: "AI Mentor Chat",
               description: userInfo.educationLevel === '10th Class' 
@@ -366,12 +361,14 @@ const Dashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription>{feature.description}</CardDescription>
+                <CardDescription className="mb-2">{feature.description}</CardDescription>
+                {feature.status && (
+                  <p className="text-sm text-orange-500 font-medium">{feature.status}</p>
+                )}
               </CardContent>
             </Card>
           ))}
         </div>
-
         {/* 12th Class Additional Features */}
         {userInfo.educationLevel === '12th Class' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
