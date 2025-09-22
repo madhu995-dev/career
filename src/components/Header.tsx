@@ -1,198 +1,283 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User } from "lucide-react";
+import { Menu, Moon, Sun, User, X } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { formatName } from "@/lib/formatName";
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const [user, setUser] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // ✅ Load stored username on mount
+  const { t, i18n } = useTranslation();
+  const [language, setLanguage] = useState(i18n.language || "en");
+
   useEffect(() => {
     const storedName = localStorage.getItem("userName");
-    if (storedName) {
-      let displayName = storedName.trim();
-      if (displayName.includes(" ")) displayName = displayName.split(" ")[0];
-      if (displayName.includes("@")) displayName = displayName.split("@")[0];
-      displayName = displayName.replace(/[^a-zA-Z]/g, "");
-      displayName =
-        displayName.length > 0
-          ? displayName.charAt(0).toUpperCase() +
-            displayName.slice(1).toLowerCase()
-          : "User";
-      setUser(displayName);
+    if (storedName) setUser(formatName(storedName));
+
+    const storedLang = localStorage.getItem("language");
+    if (storedLang) {
+      setLanguage(storedLang);
+      i18n.changeLanguage(storedLang);
     }
-  }, []);
+  }, [i18n]);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    document.documentElement.classList.toggle("dark");
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("userName");
     setUser(null);
-    navigate("/");
+    window.location.href = "/";
   };
 
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLang = e.target.value;
+    setLanguage(newLang);
+    localStorage.setItem("language", newLang);
+    i18n.changeLanguage(newLang);
+  };
+
+  // ✅ Added Demo & FAQ here
+  const navItems = [
+    { name: t("home"), href: "/" },
+    { name: t("about"), href: "#about" },
+    { name: t("features"), href: "#features" },
+    { name: "Demo", href: "#demo" },
+    { name: t("contact"), href: "#contact" },
+    ...(user ? [{ name: t("dashboard"), href: "/dashboard" }] : []),
+  ];
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white dark:bg-gray-900 dark:border-gray-800">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
-        {/* Logo */}
-        <Link to="/" className="text-xl font-bold text-blue-600">
-          CareerPath
-        </Link>
-
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6">
-          <Link to="/" className="hover:text-blue-600">
-            Home
-          </Link>
-          <Link to="/about" className="hover:text-blue-600">
-            About
-          </Link>
-          <a href="#features" className="hover:text-blue-600">
-            Features
-          </a>
-          <Link to="/courses" className="hover:text-blue-600">
-            Courses
-          </Link>
-          <Link to="/contact" className="hover:text-blue-600">
-            Contact
-          </Link>
-          <Link to={user ? "/dashboard" : "/sign-in"} className="hover:text-blue-600">
-            Dashboard
-          </Link>
-        </nav>
-
-        {/* Desktop Auth */}
-        <div className="hidden md:flex items-center gap-4">
-          {user ? (
-            <>
-              <span className="font-medium">👋 {user}</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleLogout}
-                className="text-red-500 hover:text-red-600"
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b shadow-sm">
+      <div className="container mx-auto px-4 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 group">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <svg
+                width="36"
+                height="36"
+                viewBox="0 0 24 24"
+                fill="none"
+                className="rounded-md p-1 bg-gradient-to-r from-teal-400 to-blue-500 shadow-md"
               >
-                Logout
-              </Button>
-            </>
-          ) : (
-            <Link to="/sign-in">
-              <Button size="sm" className="bg-blue-600 text-white hover:bg-blue-700">
-                Login
-              </Button>
-            </Link>
-          )}
-        </div>
+                <rect x="2" y="6" width="20" height="12" rx="3" fill="#fff" />
+                <path d="M6 8.5L10 12L6 15.5V8.5Z" fill="#0EA5A4" />
+              </svg>
+            </motion.div>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-teal-500 to-blue-600 bg-clip-text text-transparent group-hover:scale-105 transition">
+              Career Path
+            </h1>
+          </Link>
 
-        {/* Mobile Menu Button */}
-        <div className="md:hidden">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <Menu className="w-6 h-6" />
-          </Button>
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-8">
+            {navItems.map((item) =>
+              item.name === t("home") ? (
+                <Link
+                  key={item.name}
+                  to="/"
+                  onClick={() =>
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }, 100)
+                  }
+                  className="text-sm font-medium hover:text-primary transition"
+                >
+                  {item.name}
+                </Link>
+              ) : item.href.startsWith("#") ? (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="text-sm font-medium hover:text-primary transition"
+                >
+                  {item.name}
+                </a>
+              ) : (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="text-sm font-medium hover:text-primary transition"
+                >
+                  {item.name}
+                </Link>
+              )
+            )}
+          </nav>
+
+          {/* Right Controls */}
+          <div className="flex items-center gap-3">
+            {/* Language Selector */}
+            <select
+              value={language}
+              onChange={handleLanguageChange}
+              className="border rounded-md px-2 py-1 text-sm dark:bg-gray-800 dark:text-white"
+            >
+              <option value="en">English</option>
+              <option value="hi">हिन्दी</option>
+              <option value="te">తెలుగు</option>
+              <option value="ta">தமிழ்</option>
+            </select>
+
+            {/* Dark Mode Toggle */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleDarkMode}
+              className="rounded-full"
+            >
+              {darkMode ? (
+                <Sun className="w-5 h-5 text-yellow-500" />
+              ) : (
+                <Moon className="w-5 h-5 text-blue-500" />
+              )}
+            </Button>
+
+            {/* Auth Section */}
+            {user ? (
+              <div className="hidden md:flex items-center gap-2">
+                <span className="text-sm font-medium">👋 {user}</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="text-red-500 hover:text-red-600"
+                >
+                  {t("logout")}
+                </Button>
+              </div>
+            ) : (
+              <Link to="/sign-in" className="hidden md:block">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="inline-flex items-center gap-2"
+                >
+                  <User className="w-4 h-4" /> {t("login")}
+                </Button>
+              </Link>
+            )}
+
+            {/* Mobile Menu Toggle */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* ✅ Mobile Menu */}
-      {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black bg-opacity-40"
-          onClick={() => setMobileMenuOpen(false)}
-        >
-          <div
-            className="fixed top-0 right-0 w-72 h-full bg-white dark:bg-gray-900 shadow-lg flex flex-col"
-            onClick={(e) => e.stopPropagation()}
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 bg-black/40 flex justify-end"
+            onClick={() => setMobileMenuOpen(false)}
           >
-            {/* Menu Header */}
-            <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
-              <h2 className="text-lg font-bold">Menu</h2>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <X className="w-5 h-5" />
-              </Button>
-            </div>
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.3 }}
+              className="w-64 h-full bg-white dark:bg-gray-900 shadow-lg p-6 flex flex-col gap-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center">
+                <h2 className="text-lg font-bold">{t("home")}</h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
 
-            {/* Navigation */}
-            <nav className="flex flex-col gap-1 p-4">
-              <Link
-                to="/"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
-              >
-                Home
-              </Link>
-              <Link
-                to="/about"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
-              >
-                About
-              </Link>
-              <a
-                href="#features"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
-              >
-                Features
-              </a>
-              <Link
-                to="/courses"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
-              >
-                Courses
-              </Link>
-              <Link
-                to="/contact"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
-              >
-                Contact
-              </Link>
-              <Link
-                to={user ? "/dashboard" : "/sign-in"}
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 font-medium"
-              >
-                Dashboard
-              </Link>
-            </nav>
+              {/* Mobile Nav */}
+              <nav className="flex flex-col gap-4">
+                {navItems.map((item) =>
+                  item.name === t("home") ? (
+                    <Link
+                      key={item.name}
+                      to="/"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setTimeout(() => {
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        }, 100);
+                      }}
+                    >
+                      {item.name}
+                    </Link>
+                  ) : item.href.startsWith("#") ? (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.name}
+                    </a>
+                  ) : (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  )
+                )}
+              </nav>
 
-            {/* Auth Section */}
-            <div className="mt-auto p-4 border-t dark:border-gray-700">
-              {user ? (
-                <div className="flex flex-col gap-2">
-                  <span className="text-sm font-medium">👋 {user}</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleLogout}
-                    className="text-red-500 hover:text-red-600"
-                  >
-                    Logout
-                  </Button>
-                </div>
-              ) : (
-                <Link to="/sign-in" onClick={() => setMobileMenuOpen(false)}>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    className="w-full inline-flex items-center gap-2 justify-center"
-                  >
-                    <User className="w-4 h-4" /> Login
-                  </Button>
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+              {/* Auth in Mobile */}
+              <div className="mt-auto flex flex-col gap-3">
+                {user ? (
+                  <>
+                    <span className="text-sm font-medium">👋 {user}</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleLogout}
+                      className="text-red-500 hover:text-red-600"
+                    >
+                      {t("logout")}
+                    </Button>
+                  </>
+                ) : (
+                  <Link to="/sign-in" onClick={() => setMobileMenuOpen(false)}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="inline-flex items-center gap-2"
+                    >
+                      <User className="w-4 h-4" /> {t("login")}
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

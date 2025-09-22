@@ -12,6 +12,9 @@ import Scholarships from "./pages/Scholarships";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import Quiz from "./pages/Quiz";
+import GeminiChat from "./pages/GeminiChat";
+import Demo from "./pages/Demo";
+import FAQ from "./pages/FAQ";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +32,10 @@ const App = () => (
           <Route path="/colleges" element={<CollegeFinder />} />
           <Route path="/scholarships" element={<Scholarships />} />
           <Route path="/dashboard" element={<Dashboard />} />
-		  <Route path="/quiz" element={<Quiz />} />
+          <Route path="/quiz" element={<Quiz />} />
+          <Route path="/chat" element={<GeminiChat />} /> 
+          <Route path="/demo" element={<Demo />} />
+          <Route path="/faq" element={<FAQ />} />
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -45,6 +45,7 @@ app.post("/signup", async (req, res) => {
     );
     res.json({ message: "User registered successfully" });
   } catch (err) {
+    console.error("Signup Error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -59,9 +60,13 @@ app.post("/login", async (req, res) => {
     const isMatch = bcrypt.compareSync(password, user.password);
     if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user.id }, "secretkey");
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || "secretkey", {
+      expiresIn: "1h",
+    });
+
     res.json({ token, username: user.username });
   } catch (err) {
+    console.error("Login Error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -69,23 +74,46 @@ app.post("/login", async (req, res) => {
 // ✅ Protected profile
 app.get("/profile", async (req, res) => {
   const token = req.headers["authorization"];
-  if (!token) return res.status(401).json({ error: "No token" });
+  if (!token) return res.status(401).json({ error: "No token provided" });
 
   try {
-    const decoded = jwt.verify(token, "secretkey");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "secretkey");
     const user = await db.get(
       "SELECT id, username, email FROM users WHERE id = ?",
       [decoded.id]
     );
+    if (!user) return res.status(404).json({ error: "User not found" });
     res.json(user);
   } catch (err) {
-    res.status(401).json({ error: "Invalid token" });
+    console.error("Profile Error:", err);
+    res.status(401).json({ error: "Invalid or expired token" });
+  }
+});
+
+// ✅ Gemini setup
+if (!process.env.GEMINI_API_KEY) {
+  console.error("❌ Missing GEMINI_API_KEY in .env");
+  process.exit(1);
+}
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+// ✅ Gemini Chat Endpoint
+app.post("/chat", async (req, res) => {
+  const { input } = req.body;
+  if (!input) return res.status(400).json({ error: "Input text is required" });
+
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const result = await model.generateContent(input);
+    const text = result.response.text();
+    res.json({ reply: text });
+  } catch (err) {
+    console.error("Gemini Chat Error:", err);
+    res.status(500).json({ error: "Failed to fetch Gemini response" });
   }
 });
 
 // ✅ Gemini Quiz Generator
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
 app.post("/generate-quiz", async (req, res) => {
   const { numQuestions = 5, category = "career guidance" } = req.body;
 
@@ -112,15 +140,22 @@ app.post("/generate-quiz", async (req, res) => {
     try {
       questions = JSON.parse(text);
     } catch (err) {
-      return res.status(500).json({ error: "Failed to parse AI response", raw: text });
+      console.error("Quiz JSON Parse Error:", err);
+      return res.status(500).json({
+        error: "Failed to parse AI response",
+        raw: text,
+      });
     }
 
     res.json({ questions });
   } catch (err) {
-    console.error(err);
+    console.error("Quiz Generator Error:", err);
     res.status(500).json({ error: "Failed to generate quiz" });
   }
 });
 
 // ✅ Start server
-app.listen(5000, () => console.log("🚀 Server running on http://localhost:5000"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () =>
+  console.log(`🚀 Server running on http://localhost:${PORT}`)
+);

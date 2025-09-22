@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
-import QuizCTA from "@/components/QuizCTA";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { Target, Heart, Users, Award } from "lucide-react";
@@ -38,7 +37,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow">
-        {/* ✅ Hero First */}
+        {/* ✅ Hero */}
         <Hero />
 
         {/* ✅ About Section */}
@@ -65,39 +64,7 @@ const Index = () => {
             accessible career guidance and educational opportunities across India.
           </motion.p>
 
-          <motion.h3
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-2xl font-semibold mb-4"
-          >
-            Why We Built This Platform
-          </motion.h3>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="max-w-4xl mx-auto text-gray-600 dark:text-gray-300 leading-relaxed mb-16"
-          >
-            In today's rapidly evolving world, students face unprecedented
-            challenges in choosing the right career path. Traditional approaches
-            to career guidance often fall short, especially in regions like Jammu
-            & Kashmir where access to resources can be limited.
-            <br />
-            <br />
-            Our platform addresses these challenges by combining artificial
-            intelligence, real-time data, and community-driven mentorship to
-            provide personalized guidance that adapts to each student's unique
-            needs and aspirations.
-            <br />
-            <br />
-            We believe every student deserves access to quality career guidance,
-            regardless of their location or economic background. This platform is
-            our contribution to making that vision a reality.
-          </motion.p>
-
-          {/* Mission / Vision / Community / Innovation Cards */}
+          {/* Mission / Vision / Community / Innovation */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((val, index) => (
               <motion.div
@@ -124,7 +91,32 @@ const Index = () => {
         {/* ✅ Features */}
         <Features />
 
-
+        {/* ✅ Demo Section */}
+        <section
+          id="demo"
+          className="py-20 px-6 md:px-12 bg-secondary/20 text-center"
+        >
+          <motion.h2
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-3xl md:text-4xl font-bold mb-6"
+          >
+            Try Our <span className="text-blue-600">Demo</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+            className="max-w-2xl mx-auto text-gray-600 dark:text-gray-300 mb-10"
+          >
+            Experience the Career Path platform in action — explore AI-powered
+            quizzes, scholarship search, and career tools.
+          </motion.p>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md shadow">
+            Launch Demo
+          </button>
+        </section>
 
         {/* ✅ Project Highlights */}
         <section
@@ -155,29 +147,20 @@ const Index = () => {
         </section>
 
         {/* ✅ Contact Section */}
-       {/* ✅ Contact Section */}
+{/* ✅ Contact Section */}
 <section
   id="contact"
   className="py-20 px-6 md:px-12 bg-gray-50 dark:bg-gray-950"
 >
-  <motion.h2
-    initial={{ opacity: 0, y: -20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6 }}
-    className="text-3xl font-bold text-center mb-4"
-  >
-    Get in <span className="text-blue-600">Touch</span>
-  </motion.h2>
-
-  <motion.p
-    initial={{ opacity: 0 }}
-    whileInView={{ opacity: 1 }}
-    transition={{ delay: 0.2, duration: 0.8 }}
-    className="text-center text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto"
-  >
-    Have questions about our platform? Want to contribute to the project?  
-    We’d love to hear from you!
-  </motion.p>
+  <div className="text-center mb-12">
+    <h2 className="text-4xl font-bold">
+      Get in <span className="text-blue-600">Touch</span>
+    </h2>
+    <p className="mt-4 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+      Have questions about our platform? Want to contribute to the project?  
+      We’d love to hear from you!
+    </p>
+  </div>
 
   <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
     {/* Contact Form */}
@@ -223,7 +206,9 @@ const Index = () => {
       className="space-y-6 bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md"
     >
       <div>
-        <h3 className="text-lg font-semibold text-blue-600">Contact Information</h3>
+        <h3 className="text-lg font-semibold text-blue-600">
+          Contact Information
+        </h3>
         <p className="mt-2 text-gray-600 dark:text-gray-400">
           Email:{" "}
           <a
@@ -233,12 +218,18 @@ const Index = () => {
             contact@careerpath.in
           </a>
         </p>
-        <p className="text-gray-600 dark:text-gray-400">Phone: +91 98765 43210</p>
-        <p className="text-gray-600 dark:text-gray-400">Location: Jammu & Kashmir, India</p>
+        <p className="text-gray-600 dark:text-gray-400">
+          Phone: +91 98765 43210
+        </p>
+        <p className="text-gray-600 dark:text-gray-400">
+          Location: Jammu & Kashmir, India
+        </p>
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold text-blue-600">Project Information</h3>
+        <h3 className="text-lg font-semibold text-blue-600">
+          Project Information
+        </h3>
         <ul className="mt-2 space-y-1 text-gray-600 dark:text-gray-400">
           <li>
             <strong>Category:</strong> Education & Career Guidance
@@ -255,6 +246,50 @@ const Index = () => {
   </div>
 </section>
 
+
+        {/* ✅ FAQ Section */}
+        <section id="faq" className="py-20 px-4 bg-secondary/20">
+          <div className="container mx-auto">
+            <div className="text-center space-y-4 mb-16">
+              <h2 className="text-4xl font-bold">Frequently Asked Questions</h2>
+            </div>
+
+            <div className="max-w-3xl mx-auto space-y-4">
+              {[
+                {
+                  question: "How does the AI Career Quiz work?",
+                  answer:
+                    "Our AI Career Quiz analyzes your interests, skills, and goals to give personalized recommendations.",
+                },
+                {
+                  question: "Are the scholarships legitimate?",
+                  answer:
+                    "Yes, all scholarships listed are verified and updated weekly.",
+                },
+                {
+                  question: "Is Career Path free to use?",
+                  answer:
+                    "Yes, Career Path is completely free for all students.",
+                },
+                {
+                  question: "How often is data updated?",
+                  answer:
+                    "Our database is updated weekly to ensure fresh opportunities.",
+                },
+              ].map((faq, index) => (
+                <div
+                  key={index}
+                  className="bg-white dark:bg-gray-800 shadow rounded-lg p-6"
+                >
+                  <h3 className="font-semibold text-lg mb-2">{faq.question}</h3>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    {faq.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* ✅ Footer */}
