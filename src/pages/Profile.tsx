@@ -1,5 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+
 import {
   ArrowLeft,
   Edit,
@@ -19,6 +22,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
 const Profile = () => {
+	const navigate = useNavigate();
+
   const userStats = [
     {
       icon: Users,

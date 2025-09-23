@@ -17,6 +17,12 @@ import Quiz from "./pages/Quiz";
 import GeminiChat from "./pages/GeminiChat";
 import Demo from "./pages/Demo";
 import FAQ from "./pages/FAQ";
+import InnerOrbit from "./pages/InnerOrbit";
+import PrepIQ from "./pages/PrepIQ";
+import Mentorship from "./pages/Mentorship";
+import CollaborationHub from "./pages/CollaborationHub";
+import CareerExplorer from "./pages/CareerExplorer";
+
 
 // New pages
 import ResumeHelper from "./pages/ResumeHelper";
@@ -68,6 +74,12 @@ const App = () => (
           <Route path="/jobs" element={<JobsInternships />} />
           <Route path="/passion" element={<PassionExplorer />} />
           <Route path="/profile" element={<Profile />} />
+		  
+		  <Route path="/inner-orbit" element={<InnerOrbit />} />
+		  <Route path="/prepiq" element={<PrepIQ />} />
+		  <Route path="/mentorship" element={<Mentorship />} />
+		  <Route path="/collaboration" element={<CollaborationHub />} />
+		  <Route path="/careers" element={<CareerExplorer />} />
 
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />

@@ -1,26 +1,27 @@
+import { useState } from "react";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "@/firebase";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { useState } from "react";
-import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 
 const SignIn = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Email/Password Sign In
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-
-      // 🔹 Get email from input
-      const email = (document.getElementById("email") as HTMLInputElement).value;
-      const name = email.split("@")[0];
-      localStorage.setItem("userName", name);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
 
       toast({
         title: "✅ Successfully Signed In",
@@ -28,26 +29,35 @@ const SignIn = () => {
         duration: 3000,
       });
 
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 2000);
-    }, 1500);
+      setTimeout(() => navigate("/dashboard"), 1500);
+    } catch (error: any) {
+      toast({
+        title: "❌ Error",
+        description: error.message,
+        duration: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGoogleSignIn = () => {
-    // 🔹 Replace with real Google OAuth later
-    const fakeEmail = "madhu@gmail.com";
-    const name = fakeEmail.split("@")[0];
-    localStorage.setItem("userName", name);
+  // Google Sign In
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
 
-    toast({
-      title: "🔗 Google Sign-In",
-      description: "Redirecting to Google authentication...",
-    });
+      toast({
+        title: "🔗 Google Sign-In",
+        description: "Welcome back! Redirecting to your dashboard...",
+      });
 
-    setTimeout(() => {
-      window.location.href = "/dashboard";
-    }, 1500);
+      setTimeout(() => navigate("/dashboard"), 1500);
+    } catch (error: any) {
+      toast({
+        title: "❌ Google Sign-In Failed",
+        description: error.message,
+      });
+    }
   };
 
   return (
@@ -82,6 +92,8 @@ const SignIn = () => {
               placeholder="Enter your email"
               required
               className="mt-1"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -93,6 +105,8 @@ const SignIn = () => {
               placeholder="Enter your password"
               required
               className="mt-1"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
