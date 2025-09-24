@@ -25,7 +25,7 @@ const SignIn = () => {
 
       toast({
         title: "✅ Successfully Signed In",
-        description: "Welcome back! Redirecting to your dashboard...",
+        description: "Welcome back!",
         duration: 3000,
       });
 
@@ -48,7 +48,7 @@ const SignIn = () => {
 
       toast({
         title: "🔗 Google Sign-In",
-        description: "Welcome back! Redirecting to your dashboard...",
+        description: "Welcome back!",
       });
 
       setTimeout(() => navigate("/dashboard"), 1500);

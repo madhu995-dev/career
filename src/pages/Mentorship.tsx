@@ -20,11 +20,10 @@ import {
 interface MentorshipProps {
   onBack: () => void;
 }
-const navigate = useNavigate();
 
 const Mentorship = ({ onBack }: MentorshipProps) => {
   const [currentView, setCurrentView] = useState<'main' | 'mentor-directory' | 'peer-mentorship' | 'study-groups' | 'qa-forum' | 'events' | 'request-mentor'>('main');
-	
+  const navigate = useNavigate();
   // Mock data
   const mentors = [
     {

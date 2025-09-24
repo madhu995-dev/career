@@ -1,39 +1,39 @@
 import { Button } from "@/components/ui/button";
 import { Menu, Moon, Sun, User, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { formatName } from "@/lib/formatName";
 import { useTranslation } from "react-i18next";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "@/firebase"; // ✅ make sure this points to your firebase.ts
 
 const Header = () => {
   const [darkMode, setDarkMode] = useState(false);
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { t, i18n } = useTranslation();
   const [language, setLanguage] = useState(i18n.language || "en");
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  // ✅ Track Firebase auth state
   useEffect(() => {
-    const storedName = localStorage.getItem("userName");
-    if (storedName) setUser(formatName(storedName));
-
-    const storedLang = localStorage.getItem("language");
-    if (storedLang) {
-      setLanguage(storedLang);
-      i18n.changeLanguage(storedLang);
-    }
-  }, [i18n]);
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     document.documentElement.classList.toggle("dark");
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("userName");
+  const handleLogout = async () => {
+    await signOut(auth);
     setUser(null);
-    window.location.href = "/";
+    navigate("/sign-in");
   };
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -43,7 +43,28 @@ const Header = () => {
     i18n.changeLanguage(newLang);
   };
 
-  // ✅ Added Demo & FAQ here
+  // ✅ Handle navigation (routes + section scrolls)
+  const handleNavClick = (href: string) => {
+    if (href.startsWith("#")) {
+      if (location.pathname !== "/") {
+        // Navigate home first, then scroll
+        navigate("/");
+        setTimeout(() => {
+          const el = document.querySelector(href);
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }, 300);
+      } else {
+        // Already on home, just scroll
+        const el = document.querySelector(href);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      navigate(href);
+    }
+    setMobileMenuOpen(false);
+  };
+
+  // ✅ navItems dynamically include dashboard
   const navItems = [
     { name: t("home"), href: "/" },
     { name: t("about"), href: "#about" },
@@ -58,7 +79,10 @@ const Header = () => {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
+          <div
+            className="flex items-center gap-2 group cursor-pointer"
+            onClick={() => handleNavClick("/")}
+          >
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -78,42 +102,19 @@ const Header = () => {
             <h1 className="text-xl font-bold bg-gradient-to-r from-teal-500 to-blue-600 bg-clip-text text-transparent group-hover:scale-105 transition">
               Career Path
             </h1>
-          </Link>
+          </div>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
-            {navItems.map((item) =>
-              item.name === t("home") ? (
-                <Link
-                  key={item.name}
-                  to="/"
-                  onClick={() =>
-                    setTimeout(() => {
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }, 100)
-                  }
-                  className="text-sm font-medium hover:text-primary transition"
-                >
-                  {item.name}
-                </Link>
-              ) : item.href.startsWith("#") ? (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-sm font-medium hover:text-primary transition"
-                >
-                  {item.name}
-                </a>
-              ) : (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="text-sm font-medium hover:text-primary transition"
-                >
-                  {item.name}
-                </Link>
-              )
-            )}
+            {navItems.map((item) => (
+              <button
+                key={item.name}
+                onClick={() => handleNavClick(item.href)}
+                className="text-sm font-medium hover:text-primary transition"
+              >
+                {item.name}
+              </button>
+            ))}
           </nav>
 
           {/* Right Controls */}
@@ -147,7 +148,9 @@ const Header = () => {
             {/* Auth Section */}
             {user ? (
               <div className="hidden md:flex items-center gap-2">
-                <span className="text-sm font-medium">👋 {user}</span>
+                <span className="text-sm font-medium">
+                  👋 {user.displayName || user.email}
+                </span>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -158,15 +161,14 @@ const Header = () => {
                 </Button>
               </div>
             ) : (
-              <Link to="/sign-in" className="hidden md:block">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="inline-flex items-center gap-2"
-                >
-                  <User className="w-4 h-4" /> {t("login")}
-                </Button>
-              </Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="hidden md:inline-flex items-center gap-2"
+                onClick={() => handleNavClick("/sign-in")}
+              >
+                <User className="w-4 h-4" /> {t("login")}
+              </Button>
             )}
 
             {/* Mobile Menu Toggle */}
@@ -202,7 +204,7 @@ const Header = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex justify-between items-center">
-                <h2 className="text-lg font-bold">{t("home")}</h2>
+                <h2 className="text-lg font-bold">Menu</h2>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -214,45 +216,24 @@ const Header = () => {
 
               {/* Mobile Nav */}
               <nav className="flex flex-col gap-4">
-                {navItems.map((item) =>
-                  item.name === t("home") ? (
-                    <Link
-                      key={item.name}
-                      to="/"
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        setTimeout(() => {
-                          window.scrollTo({ top: 0, behavior: "smooth" });
-                        }, 100);
-                      }}
-                    >
-                      {item.name}
-                    </Link>
-                  ) : item.href.startsWith("#") ? (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {item.name}
-                    </a>
-                  ) : (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  )
-                )}
+                {navItems.map((item) => (
+                  <button
+                    key={item.name}
+                    onClick={() => handleNavClick(item.href)}
+                    className="text-left text-sm font-medium hover:text-primary transition"
+                  >
+                    {item.name}
+                  </button>
+                ))}
               </nav>
 
               {/* Auth in Mobile */}
               <div className="mt-auto flex flex-col gap-3">
                 {user ? (
                   <>
-                    <span className="text-sm font-medium">👋 {user}</span>
+                    <span className="text-sm font-medium">
+                      👋 {user.displayName || user.email}
+                    </span>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -263,15 +244,14 @@ const Header = () => {
                     </Button>
                   </>
                 ) : (
-                  <Link to="/sign-in" onClick={() => setMobileMenuOpen(false)}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="inline-flex items-center gap-2"
-                    >
-                      <User className="w-4 h-4" /> {t("login")}
-                    </Button>
-                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="inline-flex items-center gap-2"
+                    onClick={() => handleNavClick("/sign-in")}
+                  >
+                    <User className="w-4 h-4" /> {t("login")}
+                  </Button>
                 )}
               </div>
             </motion.div>

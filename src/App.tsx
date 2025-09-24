@@ -1,8 +1,10 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster"; 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebase";
 
 // Existing pages
 import Index from "./pages/Index";
@@ -23,70 +25,92 @@ import Mentorship from "./pages/Mentorship";
 import CollaborationHub from "./pages/CollaborationHub";
 import CareerExplorer from "./pages/CareerExplorer";
 
-
 // New pages
 import ResumeHelper from "./pages/ResumeHelper";
 import Mentor from "./pages/Mentor";
-import Collaboration from "./pages/Collaboration";
 import Timeline from "./pages/Timeline";
 import JobsInternships from "./pages/JobsInternships";
 import PassionExplorer from "./pages/PassionExplorer";
 import Profile from "./pages/Profile";
 
 // Quiz system
-import QuizPage from "./pages/QuizPage";     // ✅ new
-import ResultsPage from "./pages/ResultsPage"; // ✅ new
+import QuizPage from "./pages/QuizPage";     
+import ResultsPage from "./pages/ResultsPage"; 
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          {/* Auth & General */}
-          <Route path="/" element={<Index />} />
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
+const App = () => {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-          {/* Core Features */}
-          <Route path="/career-quiz" element={<CareerQuiz />} />
-          <Route path="/colleges" element={<CollegeFinder />} />
-          <Route path="/scholarships" element={<Scholarships />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/chat" element={<GeminiChat />} /> 
-          <Route path="/demo" element={<Demo />} />
-          <Route path="/faq" element={<FAQ />} />
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
-          {/* Quiz Routes */}
-          <Route path="/quiz/10th" element={<QuizPage level="10th" />} />
-          <Route path="/quiz/12th" element={<QuizPage level="12th" />} />
-          <Route path="/results" element={<ResultsPage />} />
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
 
-          {/* Newly Added Pages */}
-          <Route path="/resume" element={<ResumeHelper />} />
-          <Route path="/mentor" element={<Mentor />} />
-          <Route path="/collaboration" element={<Collaboration />} />
-          <Route path="/timeline" element={<Timeline />} />
-          <Route path="/jobs" element={<JobsInternships />} />
-          <Route path="/passion" element={<PassionExplorer />} />
-          <Route path="/profile" element={<Profile />} />
-		  
-		  <Route path="/inner-orbit" element={<InnerOrbit />} />
-		  <Route path="/prepiq" element={<PrepIQ />} />
-		  <Route path="/mentorship" element={<Mentorship />} />
-		  <Route path="/collaboration" element={<CollaborationHub />} />
-		  <Route path="/careers" element={<CareerExplorer />} />
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        {/* ✅ Toasts available everywhere */}
+        <Toaster />
+        <BrowserRouter>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Index />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
 
-          {/* Catch-all route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+            {/* Core Features */}
+            <Route path="/career-quiz" element={<CareerQuiz />} />
+            <Route path="/colleges" element={<CollegeFinder />} />
+            <Route path="/scholarships" element={<Scholarships />} />
+            <Route path="/quiz" element={<Quiz />} />
+            <Route path="/chat" element={<GeminiChat />} /> 
+            <Route path="/demo" element={<Demo />} />
+            <Route path="/faq" element={<FAQ />} />
+
+            {/* Protected Dashboard */}
+            <Route
+              path="/dashboard"
+              element={user ? <Dashboard /> : <Navigate to="/sign-in" replace />}
+            />
+
+            {/* Quiz Routes */}
+            <Route path="/quiz/10th" element={<QuizPage level="10th" />} />
+            <Route path="/quiz/12th" element={<QuizPage level="12th" />} />
+            <Route path="/results" element={<ResultsPage />} />
+
+            {/* Newly Added Pages */}
+            <Route path="/resume" element={<ResumeHelper />} />
+            <Route path="/mentor" element={<Mentor />} />
+            <Route path="/timeline" element={<Timeline />} />
+            <Route path="/jobs" element={<JobsInternships />} />
+            <Route path="/passion" element={<PassionExplorer />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/inner-orbit" element={<InnerOrbit />} />
+            <Route path="/prepiq" element={<PrepIQ />} />
+            <Route path="/mentorship" element={<Mentorship />} />
+            <Route path="/collaboration" element={<CollaborationHub />} />
+            <Route path="/careers" element={<CareerExplorer />} />
+
+            {/* Catch-all route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

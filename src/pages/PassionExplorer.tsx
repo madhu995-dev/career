@@ -5,8 +5,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 const PassionExplorer = () => {
-	const navigate = useNavigate();
-
   // Hardcoded passion data
   const passions = [
     {
@@ -76,6 +74,7 @@ const PassionExplorer = () => {
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
         </Link>
+
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
